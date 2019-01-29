@@ -12,14 +12,15 @@ const knex = require("knex")({
 });
 
 
-//   const query = "SELECT id, first_name, last_name, to_char(birthdate, 'DD-MM-YYYY') AS date FROM famous_people WHERE first_name=$1 OR last_name=$1;";
-
-knex.select("id", "first_name", "last_name", "to_char(birthdate, 'DD-MM-YYYY') AS date")
+const query = knex.select("id", "first_name", "last_name", "birthdate")
   .from('famous_people')
   .where('first_name', '=', name)
   .orWhere('last_name', '=', name)
   .then(function(rows) {
     printResult(rows);
+  })
+  .finally(function() {
+    knex.destroy();
   })
   .catch(function(error) {
     console.error(error);
@@ -28,25 +29,7 @@ knex.select("id", "first_name", "last_name", "to_char(birthdate, 'DD-MM-YYYY') A
 const printResult = function(rows) {
   console.log(`Found ${rows.length} person(s) by the name '${name}':`);
     rows.forEach(function(person) {
-      console.log(`${person.id}: ${person.first_name} ${person.last_name}, born ${person.birthdate.toDateString('DD-MM-YYYY')}`);
+      console.log(`${person.id}: ${person.first_name} ${person.last_name}, born ${person.birthdate.toDateString()}`);
     });
 };
 
-// const doQuery = function (query, values) {
-//   client.query(query, values, (err, result) => {
-//     if (err) {
-//       return console.error("error running query", err);
-//     }
-//     printResult(result.rows);
-//     client.end();
-//   });
-// };
-
-// client.connect((err) => {
-//   if (err) {
-//     return console.error("Connection Error", err);
-//   }
-//   console.log('Searching ...');
-//   const values = [name];
-//   doQuery(query, values);
-// });
