@@ -19,7 +19,7 @@ const printResult = function(rows) {
 };
 
 const doQuery = function (query, values) {
-    client.query(query, values, (err, result) => {
+  client.query(query, values, (err, result) => {
     if (err) {
       return console.error("error running query", err);
     }
